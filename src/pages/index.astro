@@ -1,0 +1,145 @@
+---
+import ConceptVisual from '../components/ConceptVisual.astro';
+import { chapters, tracks, references } from '../data/course';
+import { installs } from '../data/install';
+import { learningAssets } from '../data/learningAssets';
+import waveform from '../data/waveform.json';
+import '../styles/site.css';
+import '../styles/modern-editorial.css';
+const base=import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const time=(s:number)=>`${String(Math.floor(s/60)).padStart(2,'0')}:${String(Math.floor(s%60)).padStart(2,'0')}`;
+const initialResources=chapters[0].resources.map(id=>references[id]);
+const firstGuide=learningAssets[chapters[0].id];
+const totalSeconds=tracks.reduce((a,t)=>a+t.length,0);
+---
+<!doctype html>
+<html lang="en" data-asset-base={base}>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f5f0e8" />
+  <meta name="description" content="Audio-guided OSS container engineering course: from working environment to reproducible workloads, with synchronized lesson visuals, labs, and curated resources." />
+  <title>Containers in Practice · Developer Learning Lab</title>
+</head>
+<body>
+  <a class="skip-link" href="#course-main">Skip to lesson content</a>
+  <header class="masthead">
+    <a class="brand-mark" href="#baseline" aria-label="Containers in Practice home"><span class="brand-glyph"><i></i><i></i><i></i><i></i></span><span>OPEN SYSTEMS <em>/</em> LEARNING LAB</span></a>
+    <div class="masthead-center"><span class="connected-dot"></span> SELF-PACED · ENGINEERING PRACTICE</div>
+    <div class="masthead-right"><span class="pill-outline">OPEN SOURCE ONLY</span><span>MODULES 00—03</span><button class="theme-motion" id="theme-motion" type="button" aria-pressed="false" aria-label="Pause background motion">Pause motion</button></div>
+  </header>
+
+  <div class="mobile-actions"><button type="button" data-mobile="nav" aria-expanded="false">☷ &nbsp; Narration</button><button type="button" data-mobile="resources" aria-expanded="false">↗ &nbsp; Resources</button></div>
+  <div class="workspace">
+    <aside class="narration-panel" id="nav-panel" aria-label="Narration and section navigation">
+      <div class="player-dock" aria-label="Pinned narration player">
+        <div class="panel-meta"><span><span class="signal-led"></span> NARRATED COURSE</span><span>04 NARRATED MODULES</span></div>
+        <div class="playing-label">NOW PLAYING</div>
+        <h2 id="now-title">{chapters[0].title}</h2>
+        <p id="now-subtitle">{chapters[0].subtitle}</p>
+        <audio id="course-audio" preload="metadata" src={`${base}audio/${tracks[0].file}`}></audio>
+        <div class="player-row"><button type="button" id="play" class="play-button" aria-label="First check course prerequisites to unlock narration" aria-describedby="player-prereq-message" aria-pressed="false" disabled><svg class="play-glyph" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path class="play-glyph-triangle" d="M8 5.5 19 12 8 18.5Z" fill="currentColor"/><g class="play-glyph-bars"><rect x="6.8" y="5.5" width="3.6" height="13" rx="1" fill="currentColor"/><rect x="13.6" y="5.5" width="3.6" height="13" rx="1" fill="currentColor"/></g></svg></button><div class="wave-area"><div class="wave-bars" id="wave-bars" aria-hidden="true">{waveform[0].map((level,i)=><span class="wave-bar" style={`--a:${level}`} data-bar={i}></span>)}</div><input type="range" id="wave-seek" aria-label="Seek audio position. Audio plays after seeking." disabled value="0" min="0" max={tracks[0].length} step="0.1" /><div class="time-row"><time id="elapsed">00:00</time><time id="duration">{time(tracks[0].length)}</time></div></div></div>
+        <p id="player-prereq-message" class="player-prereq-message" role="status">Start with <strong>Check course prerequisites</strong> on the opening card to unlock narration.</p>
+        <div class="player-tools"><button type="button" id="speed" aria-label="Cycle playback speed">1.0×</button><button type="button" id="follow" aria-pressed="true"><span class="mini-switch"><i></i></span> Follow narration</button><span class="current-recording" id="recording-label">FILE 01 / 10</span></div>
+      </div>
+      <div class="chapter-scroll" id="chapter-scroll" aria-label="Scrollable module navigation" tabindex="0">
+        <div class="nav-divider"></div>
+        <div class="nav-head"><span>CONTENTS</span><span>{chapters.length} BEATS</span></div>
+        <a class="prereq-nav-entry" href={`${base}prerequisites/`}><span class="prereq-nav-bullet">◉</span><span><strong>Course Prerequisites</strong><small>Check your computer · before 00.0</small></span><span aria-hidden="true">↗</span></a>
+        <div class="module-picker" role="group" aria-label="Select a module"><button data-module-jump="0" class="chosen" type="button">00 &nbsp; Prepare</button><button data-module-jump="1" type="button">01 &nbsp; Build</button><button data-module-jump="2" type="button">02 &nbsp; Scale</button><button data-module-jump="3" type="button">03 &nbsp; Recover</button></div>
+        <nav aria-label="Audio chapter navigation" class="chapter-list">
+          {([0,1,2,3] as const).map(module=><div class="chapter-group" data-module-group={module}>
+            <div class="group-head"><span>MODULE {String(module).padStart(2,'0')}</span><small>{module===0?'Orientation':module===1?'Build & reproduce':module===2?'Scale the workload':'Durability & resilience'}</small></div>
+            {chapters.filter(c=>c.module===module).map((c,i)=><button type="button" class:list={['chapter-button',{'selected':c.id==='baseline'}]} data-seek-chapter={c.id} aria-current={c.id==='baseline'?'step':undefined}>
+              <span class="chapter-code">{c.lesson}</span><span class="chapter-text"><strong>{c.title}</strong><small>{c.subtitle}</small></span><time>{time(c.at)}</time>
+            </button>)}
+          </div>)}
+        </nav>
+        <div class="nav-footer"><a style="display:block;padding:12px 8px;color:#f0c4a4;font-weight:700" href={`${base}module-3/`}>03 &nbsp; Durability & Resilience · Field guide ↗</a></div><div class="nav-footer">◌ &nbsp; Every section stays visible. Click a chapter or the waveform to navigate.</div>
+      </div>
+    </aside>
+
+    <main id="course-main" class="lesson-main">
+      <section class="welcome-panel" aria-label="Course introduction">
+        <div class="hero-field" aria-hidden="true"></div>
+        <div class="hero-topline"><span class="tiny-live"><i></i> AUDIO-GUIDED ENGINEERING</span><span class="hero-corner">00 / 01</span></div>
+        <div class="hero-copy"><span class="eyebrow light">CONTAINERS IN PRACTICE</span><h1>Build systems you<br/><em>can reproduce.</em></h1><p>From an operational baseline to a portable application, durable state, and repeatable infrastructure.</p><div class="hero-actions"><a class="hero-prereq-action" data-prereq-entry href={`${base}prerequisites/`}>Check course prerequisites <span>↗</span></a><a href={`${base}prerequisites/`}>First complete the OS test ↗</a></div></div>
+        <div class="hero-schematic" aria-hidden="true"><div class="orbit outer"></div><div class="orbit mid"></div><div class="orbit inner"></div><div class="orbit-core"><span>OCI</span><b>BUILD</b></div><i class="orbit-point op-one"></i><i class="orbit-point op-two"></i></div>
+        <div class="hero-bottom"><span>{String(tracks.length).padStart(2,'0')} RECORDINGS</span><span>{time(totalSeconds)} AUDIO</span><span>{chapters.length} LESSON BEATS</span><span>ASTRO · STATIC SITE</span></div>
+      </section>
+      <div class="prereq-before-module"><strong>FIRST · COURSE PREREQUISITES</strong><span>Check CPU, RAM, storage, and your Linux runtime allocation before installation</span><a href={`${base}prerequisites/`}>Open readiness check ↗</a></div>
+      <div class="reading-guide"><span>LEARNING PATTERN</span><span>ORIENT <i>→</i> INSPECT <i>→</i> BUILD <i>→</i> TEST <i>→</i> BREAK <i>→</i> REPAIR <i>→</i> VERIFY</span></div>
+      {chapters.map((chapter,index)=><section id={chapter.id} class:list={['lesson-beat',{'current-beat':index===0}]} data-chapter={chapter.id} data-track={chapter.track} aria-labelledby={`title-${chapter.id}`}>
+        {(chapter.id==='m1-opening'||chapter.id==='m2-opening'||chapter.id==='m3-0') && <div class="module-boundary"><span class="module-boundary-line"></span><span>{chapter.module===1?'MODULE 01 / BUILD AND REPRODUCE':chapter.module===2?'MODULE 02 / SCALE THE WORKLOAD':'MODULE 03 / DURABILITY AND RESILIENCE'}</span><span class="module-boundary-line"></span></div>}
+        <div class="beat-top"><span class="beat-kind"><span class="beat-dot"></span>{chapter.kind} <b>·</b> {chapter.lesson}</span><span class="beat-time">RECORDING {String(chapter.track+1).padStart(2,'0')} &nbsp; {time(chapter.at)}</span></div>
+        <div class="beat-heading"><p class="beat-overline">{chapter.title}</p><h2 id={`title-${chapter.id}`} data-emphasis="heading">{chapter.heading}</h2><p class="beat-description">{chapter.description}</p></div>
+        {chapter.id==='baseline' && <div class="module0-next-action" aria-label="Module 0 setup route">
+          <div class="setup-route" aria-label="Three steps to a working environment">
+            <span class="is-now"><b>00.0</b> Orient</span><span aria-hidden="true">→</span><span><b>00.1</b> Install</span><span aria-hidden="true">→</span><span><b>00.2</b> Verify</span>
+          </div>
+          <div class="setup-action-content"><div><span class="setup-action-kicker">YOUR NEXT STEP · CHAPTER 00.1</span><h3>Prepare your environment</h3><p>Choose your operating system and install the six open-source tools needed for Module 1. We'll add Kubernetes later, when the course introduces scaling.</p></div><button class="setup-primary-action" type="button" data-flow-jump="toolchain">Choose your OS <span aria-hidden="true">↗</span></button></div>
+        </div>}
+        {chapter.id==='m2-shared-state' ? <figure class="shared-state-architecture"><div class="course-video-header"><span>WATCH & EXPLAIN · 14 SECONDS</span><strong>How replicas share state</strong></div><video controls playsinline preload="metadata" poster={`${base}video/iso-mod2-poster.jpg`} aria-label="Play the isometric animation of clients, Kubernetes Service, API Pods and Valkey"><source src={`${base}video/iso-mod2-animation.mp4`} type="video/mp4"/>Your browser does not support video. <a href={`${base}video/iso-mod2-animation.mp4`}>Open the animation</a>.</video><figcaption>Watch one client reach Pod 1, then a subsequent connection reach Pod 3. <strong>Pod-to-Valkey traffic is conditional</strong>: only requests that need shared state read or write the datastore. <a href={`${base}resources/shared-state/`}>Open the annotated explanation ↗</a></figcaption></figure> : <ConceptVisual type={chapter.visual} labels={chapter.labels}/>}
+        <div class="idea-strip"><span>THE DECISION</span><strong data-emphasis="insight">{chapter.insight}</strong></div>
+        <div class="verify-strip"><span class="verify-icon">✓</span><div><small>HOW YOU KNOW IT WORKED</small><p data-emphasis="evidence">{chapter.evidence}</p></div></div>
+        {(chapter.activity || chapter.code) && <details class="lab-disclosure" open={chapter.id==='preflight'}><summary><span class="lab-icon">⌘</span><span>Try it <small>· short lab / copyable commands</small></span><span class="disclosure-plus">＋</span></summary><div class="lab-inner">{chapter.activity && <p>{chapter.activity}</p>}{chapter.code && <div class="code-card"><div class="code-head"><span>{chapter.codeLabel||'TERMINAL'}</span><button type="button" data-copy-code aria-label="Copy commands">Copy ↗</button></div><pre><code>{chapter.code}</code></pre></div>}{chapter.aside && <p class="lab-note">{chapter.aside}</p>}</div></details>}
+        {chapter.id==='toolchain' && <div class="installer"><div class="installer-head"><div><small>CHAPTER 00.1 · GUIDED INSTALLATION</small><h3>Install the Module 1 toolchain</h3></div><span>04 PLATFORMS</span></div><div class="platform-tabs" role="tablist" aria-label="Choose your operating system">{installs.map((p,i)=><button type="button" role="tab" data-platform={p.id} id={`tab-${p.id}`} aria-controls={`os-${p.id}`} aria-selected={i===0?'true':'false'} tabindex={i===0?'0':'-1'}>{p.label}</button>)}</div>
+        {installs.map((p,i)=><div id={`os-${p.id}`} role="tabpanel" aria-labelledby={`tab-${p.id}`} data-platform-panel={p.id} hidden={i!==0} class="platform-panel"><p>{p.context}</p>{p.steps.map((step,j)=><details class="install-step" open={j===0}><summary><span>{String(j+1).padStart(2,'0')}</span><b>{step.title}</b><span>＋</span></summary><div class="code-card"><div class="code-head"><span>TERMINAL</span><button type="button" data-copy-code>Copy ↗</button></div><pre><code>{step.code}</code></pre></div>{step.detail && <p>{step.detail}</p>}</details>)}<p class="os-footnote">ⓘ {p.footnote}</p></div>)}
+          <div class="install-to-verify"><div><strong>Installation complete?</strong><p>Next, confirm that the commands work and that Podman can actually run a container.</p></div><button type="button" data-flow-jump="preflight">Run the preflight <span aria-hidden="true">↗</span></button></div>
+        </div>}
+        {chapter.id==='preflight' && <div class="preflight-expectations"><span class="setup-action-kicker">CHAPTER 00.2 · EXPECTED RESULTS</span><h3>What counts as working?</h3><div class="preflight-results"><div><b>01</b><strong>Tool commands succeed</strong><p>Each version command displays a version. If a command isn't found, return to your OS installation steps.</p></div><div><b>02</b><strong>A container actually runs</strong><p><code>podman run --rm quay.io/podman/hello</code> pulls and executes an OCI image, then exits successfully.</p></div><div><b>03</b><strong>Record your result</strong><p>Capture unexpected behavior before troubleshooting, then save the verified environment at Checkpoint 0.</p></div></div></div>}
+        {chapter.id==='checkpoint' && <div class="checkpoint-list"><div class="checkpoint-heading"><strong>Checkpoint 0</strong><span id="check-progress">0 / 4 COMPLETE</span></div>{[
+          ['command','Required CLI commands respond'],['tofu','OpenTofu verification succeeds'],['image','Small OCI container runs successfully'],['repo','Course repository and checkpoint are accessible']
+        ].map(([id,label])=><label class="check-row"><input type="checkbox" data-check={id}/><span class="check-icon">✓</span>{label}</label>)}</div>}
+        {chapter.id==='checkpoint' && <div class="checkpoint-handoff" aria-label="Coming next: Module 1"><span class="setup-action-kicker">COMING NEXT · MODULE 01</span><h3 data-emphasis="handoff">From ready to reproducible</h3><p>Checkpoint 0 establishes that your tools and runtime work. Next, use Buildah and Podman to package and run an API, externalize its configuration and data, then prove the entire environment can be reconstructed.</p><div class="handoff-path"><span>Package</span><span aria-hidden="true">→</span><span>Configure</span><span aria-hidden="true">→</span><span>Rebuild</span></div><button type="button" class="setup-primary-action" data-flow-jump="m1-opening">Continue to Module 1 <span aria-hidden="true">↗</span></button></div>}
+        {chapter.id==='m2-checkpoint' && <div class="checkpoint-handoff" aria-label="Next module: durability and resilience"><span class="setup-action-kicker">COMING NEXT · MODULE 03</span><h3>What survives when things fail?</h3><p>Continue with the three new Module 3 narration recordings: persistent data, verified backups, health probes, graceful termination and recovery.</p><div class="handoff-path"><span>Preserve</span><span aria-hidden="true">→</span><span>Detect</span><span aria-hidden="true">→</span><span>Recover</span></div><button type="button" class="setup-primary-action" data-flow-jump="m3-0">Continue to narrated Module 3 ↗</button></div>}
+        <div class="beat-foot"><span>{`MODULE ${String(chapter.module).padStart(2,'0')}`}</span><span>◌ &nbsp; LISTEN · EXPLORE · VERIFY</span><button type="button" data-next-chapter={chapter.id}>Next chapter ↗</button></div>
+      </section>)}
+      <footer class="course-footer"><strong>Keep the source. Keep the evidence.</strong><p>Everything in this course is static and inspectable. Your learning is validated by what the system does, not by how long the audio plays.</p><span>OPEN SYSTEMS / LEARNING LAB · OSS FIRST</span></footer>
+    </main>
+
+    <aside class="resources-panel" id="resources-panel" aria-label="Lesson resources">
+      <div class="resources-inner">
+        <div class="resources-top"><span>↗ &nbsp; LEARNING RESOURCES</span><span class="resource-led"></span></div>
+        <div class="resource-lesson">FOR THIS CHAPTER · <span id="resource-lesson-code">00.0</span></div>
+        <h2 id="resources-heading">{chapters[0].title}</h2>
+        <p id="resources-subheading">{chapters[0].subtitle}</p>
+        <div class="resource-purpose"><small>THE QUESTION TO ANSWER</small><strong id="resource-focus">{firstGuide.question}</strong></div><button type="button" id="resource-audio-toggle" class="resource-pacing-button" aria-label="Pause or resume narration while using resources">Resume narration ▶</button>
+        <div id="resource-video" class="resource-video-feature" hidden>
+          <div class="resource-video-head"><span>VISUAL EXPLANATION</span><span id="resource-video-now">14 SEC</span></div>
+          <video id="resource-video-player" controls playsinline preload="metadata" poster={`${base}video/iso-mod2-poster.jpg`} aria-label="Isometric architecture animation showing five clients, Kubernetes Service, three API Pods and Valkey">
+            <source src={`${base}video/iso-mod2-animation.mp4`} type="video/mp4"/>
+            Your browser does not support MP4 playback.
+          </video>
+          <a class="resource-video-link" href={`${base}resources/shared-state/`} target="_blank" rel="noopener noreferrer">Architecture explanation & transcript notes ↗</a>
+        </div>
+        <details class="resource-activity" open><summary><span class="resource-type">EXPLORE · 2 MIN</span><b id="resource-explore-title">Try an observation</b><span aria-hidden="true">⌄</span></summary><div class="resource-activity-body"><p id="resource-explore">{firstGuide.explore}</p><p class="resource-evidence"><b>Look for</b> <span id="resource-observe">{firstGuide.observe}</span></p></div></details>
+        <details class="resource-help"><summary><span class="resource-type">IF YOU'RE STUCK</span><b id="resource-confusion">{firstGuide.confusion}</b><span aria-hidden="true">⌄</span></summary><p id="resource-recover">{firstGuide.recover}</p></details>
+        <div class="resource-separator"></div>
+        <div class="resource-label"><span>GO DEEPER · SELECTED SOURCES</span><span id="resource-count">00</span></div>
+        <div class="resource-cards" id="resource-cards"></div>
+        <div class="resource-note"><span>◎ &nbsp; USE THE RESOURCE, THEN REJOIN</span><p>Pause to explore or troubleshoot. You can return to this chapter without losing the recording position.</p></div>
+        <div class="quick-actions"><a id="download-lab" href={`${base}downloads/module-1-labs.zip`} download hidden>Download Module 1 lab files <span>↗</span></a><a id="download-module2-lab" href={`${base}downloads/module-2-terminal-lab.zip`} download hidden>Download standalone terminal Lab 2.0 <span>↗</span></a><a href="#toolchain">Installation guide <span>↗</span></a><a href="#checkpoint">Checkpoint 0 <span>↗</span></a></div>
+        <div class="mini-map"><span>COURSE PROGRESSION</span><div><i class="mini-progress" id="course-progress"></i></div><small id="progress-label">01 / {chapters.length} SECTIONS</small></div>
+      </div>
+    </aside>
+  </div>
+  <script is:inline>
+    (() => {
+      const b=document.getElementById('theme-motion');
+      if (!b) return;
+      const setMotion=(off) => {
+        document.body.classList.toggle('motion-off',off);
+        b.textContent=off?'Resume motion':'Pause motion';
+        b.setAttribute('aria-label',off?'Resume background motion':'Pause background motion');
+        b.setAttribute('aria-pressed',String(off));
+      };
+      const reduced=window.matchMedia('(prefers-reduced-motion: reduce)');
+      setMotion(reduced.matches);
+      b.addEventListener('click',()=>setMotion(!document.body.classList.contains('motion-off')));
+      reduced.addEventListener?.('change',e=>setMotion(e.matches));
+    })();
+  </script>
+  <script>import '../scripts/experience.ts';</script>
+</body>
+</html>

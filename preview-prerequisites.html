@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#f5f0e8"/>
+<meta name="description" content="Course Prerequisites: system resources and machine readiness before Containers in Practice Module 00.0."/>
+<title>Course Prerequisites · Containers in Practice · Offline Preview</title><link rel="stylesheet" href="./src/styles/site.css"/><link rel="stylesheet" href="./src/styles/modern-editorial.css"/>
+</head>
+<body class="prerequisites-page">
+<header class="masthead"><a class="brand-mark" href="./preview-course.html"><span class="brand-glyph"><i></i><i></i><i></i><i></i></span><span>OPEN SYSTEMS <em>/</em> LEARNING LAB</span></a><div class="masthead-center">COURSE PREREQUISITES</div><div class="masthead-right"><span class="pill-outline">OPEN SOURCE ONLY</span></div></header>
+<main id="prerequisites-main" class="prerequisite-shell">
+<div class="prerequisite-breadcrumb"><a href="./preview-course.html">Containers in Practice</a><span aria-hidden="true">/</span><strong>Course Prerequisites</strong></div>
+<div class="prerequisite-hero"><span class="eyebrow">START HERE · BEFORE 00.0</span><h1>Course Prerequisites</h1><p>Before the containers, check the horsepower. A quick reality check now beats blaming Kubernetes for a RAM shortage later.</p><p class="prerequisite-tagline">No setup-by-guesswork. Run the check. Know your limits. Then begin.</p><div class="prerequisite-status"><span>UNNUMBERED OPENING MODULE</span><span>READINESS · 2-MIN CHECK</span></div></div>
+<section class="prerequisite-player" aria-label="Course prerequisites narrated introduction">
+  <div class="prerequisite-player-copy"><span class="audio-live"><span aria-hidden="true">●</span> LISTEN FIRST</span><strong>Course Prerequisites · Narration</strong><small>03:31 · The real check happens below, on your machine.</small></div>
+  <audio id="prerequisite-audio" controls preload="metadata" src="./public/audio/course-prerequisites.mp3">Your browser does not support audio playback.</audio>
+</section>
+<div class="prerequisite-columns"><div class="prerequisite-primary">        <div class="readiness" aria-label="Computer requirements for this course">
+          <div class="readiness-intro"><div><span class="setup-action-kicker">BEFORE YOU INSTALL · MACHINE READINESS</span><h3>Can your computer support the labs?</h3><p>Check your available resources before selecting a toolchain. The later Kubernetes exercises run several services simultaneously and require more headroom than Module 1.</p></div><span class="readiness-label">2-MIN CHECK</span></div>
+          <div class="readiness-compare" role="table" aria-label="Planning targets for learner computers">
+            <div class="readiness-row readiness-head" role="row"><span role="columnheader">RESOURCE</span><span role="columnheader">MODULES 0–1</span><span role="columnheader">FULL COURSE · RECOMMENDED</span></div>
+            <div class="readiness-row" role="row"><strong role="cell">CPU</strong><span role="cell">4 logical cores</span><span role="cell">8 logical cores</span></div>
+            <div class="readiness-row" role="row"><strong role="cell">RAM</strong><span role="cell">8 GB</span><span role="cell">16–32 GB</span></div>
+            <div class="readiness-row" role="row"><strong role="cell">Free storage</strong><span role="cell">20 GB</span><span role="cell">40–80 GB</span></div>
+            <div class="readiness-row" role="row"><strong role="cell">Platform</strong><span role="cell">64-bit OS</span><span role="cell">Linux containers and virtualization where applicable</span></div>
+          </div>
+          <p class="readiness-caveat">These are <strong>course planning targets</strong>, not official product minimums. On an 8 GB machine, start with Modules 0–1; plan additional RAM or a smaller workload for Kubernetes, monitoring, and load-testing activities.</p>
+          <div class="readiness-checks"><h4>Check your machine</h4><p>Choose the system you're using and run its read-only checks. <strong>WSL and macOS learners:</strong> check both the host and the Linux guest before running cluster labs.</p>
+            <details class="readiness-os" data-os="ubuntu"><summary><span>Ubuntu / WSL</span><span aria-hidden="true">＋</span></summary><div class="readiness-os-body"><p>Use the Linux shell. WSL shows resources in the Ubuntu guest, not the total Windows host.</p><div class="code-card"><div class="code-head"><span>READ-ONLY SYSTEM CHECK</span><button type="button" data-copy-code>Copy ↗</button></div><pre><code>printf &quot;Logical CPUs: &quot;; nproc
+free -h
+df -h &quot;$HOME&quot;
+stat -fc %T /sys/fs/cgroup</code></pre></div><p class="readiness-footnote">For rootless kind, cgroup filesystem should report cgroup2fs.</p></div></details><details class="readiness-os" data-os="rhel-fedora"><summary><span>RHEL / Fedora</span><span aria-hidden="true">＋</span></summary><div class="readiness-os-body"><p>Check the native Linux host before installing tools.</p><div class="code-card"><div class="code-head"><span>READ-ONLY SYSTEM CHECK</span><button type="button" data-copy-code>Copy ↗</button></div><pre><code>printf &quot;Logical CPUs: &quot;; nproc
+free -h
+df -h &quot;$HOME&quot;
+stat -fc %T /sys/fs/cgroup</code></pre></div><p class="readiness-footnote">Confirm cgroup v2 and appropriate systemd delegation for rootless kind.</p></div></details><details class="readiness-os" data-os="macos"><summary><span>macOS</span><span aria-hidden="true">＋</span></summary><div class="readiness-os-body"><p>Check the Mac host, then compare with the container Linux guest.</p><div class="code-card"><div class="code-head"><span>READ-ONLY SYSTEM CHECK</span><button type="button" data-copy-code>Copy ↗</button></div><pre><code>sysctl -n hw.logicalcpu
+sysctl -n hw.memsize
+df -h &quot;$HOME&quot;</code></pre></div><p class="readiness-footnote">hw.memsize is in bytes. Check the Linux VM CPU and memory settings.</p></div></details><details class="readiness-os" data-os="windows"><summary><span>Windows</span><span aria-hidden="true">＋</span></summary><div class="readiness-os-body"><p>Use PowerShell for host resources; compare with Ubuntu WSL 2 guest.</p><div class="code-card"><div class="code-head"><span>READ-ONLY SYSTEM CHECK</span><button type="button" data-copy-code>Copy ↗</button></div><pre><code>(Get-CimInstance Win32_Processor | Measure-Object NumberOfLogicalProcessors -Sum).Sum
+[math]::Round((Get-CimInstance Win32_ComputerSystem).TotalPhysicalMemory / 1GB, 1)
+Get-PSDrive C
+wsl --status
+wsl -l -v</code></pre></div><p class="readiness-footnote">Confirm WSL 2 and virtualization; WSL guest memory may be capped.</p></div></details>
+          </div>
+          <p class="readiness-links">Verify prerequisites: <a href="https://kind.sigs.k8s.io/docs/user/rootless/" target="_blank" rel="noopener noreferrer">kind rootless support ↗</a> · <a href="https://learn.microsoft.com/en-us/windows/wsl/wsl-config" target="_blank" rel="noopener noreferrer">WSL VM allocations ↗</a> · <a href="https://lima-vm.io/docs/" target="_blank" rel="noopener noreferrer">Lima VM configuration ↗</a></p>
+        </div>
+<form class="prerequisite-assessment" id="prerequisite-assessment" novalidate>
+  <div class="prerequisite-assessment-head"><span class="assessment-kicker">02 / RECORD WHAT YOU FOUND</span><h3>Numbers, please. Not vibes.</h3><p>Run the read-only command for your chosen system above. Enter the capacity available to the environment that will run your containers. On macOS and Windows, check the Linux guest allocation too.</p></div>
+  <div class="assessment-fields">
+    <label for="check-cpu">Logical CPU cores <input id="check-cpu" name="cpu" type="number" min="1" step="1" inputmode="numeric" placeholder="e.g. 8" required></label>
+    <label for="check-memory">Usable RAM · GB <input id="check-memory" name="ram" type="number" min="0.1" step="0.1" inputmode="decimal" placeholder="e.g. 16" required></label>
+    <label for="check-disk">Free storage · GB <input id="check-disk" name="disk" type="number" min="0.1" step="0.1" inputmode="decimal" placeholder="e.g. 64" required></label>
+  </div>
+  <div class="assessment-confirm"><label><input type="checkbox" id="check-ran"> <span>I ran the checks for my selected OS and recorded what the intended container environment can use.</span></label><label><input type="checkbox" id="check-reviewed"> <span>I understand the result, including any limits I’ll need to address before the Kubernetes labs.</span></label></div>
+  <div class="assessment-result" id="assessment-result" aria-live="polite"><strong>Awaiting your system check</strong><p>Choose an OS, run the commands, and enter your findings. The course does not read your hardware automatically.</p></div>
+</form><section class="prerequisite-finish" id="prerequisite-finish"><span class="setup-action-kicker">03 / CLEAR FOR TAKEOFF?</span><h2>You've checked the machine. Now we can talk containers.</h2><p>Module 00.0 opens when you've completed the self-check, regardless of whether your machine meets the full-course recommendation. Below-target results call for a plan—not a fake green checkmark.</p><a id="prerequisite-continue" class="prerequisite-continue" href="./preview-course.html#baseline" aria-disabled="true" tabindex="-1">Complete the OS check to unlock 00.0 <span aria-hidden="true">→</span></a><p class="prerequisite-gate-help" id="prerequisite-gate-help" aria-live="polite">You haven't finished the preflight yet.</p></section></div>
+<aside class="prerequisite-notes"><div class="prerequisite-note"><span class="setup-action-kicker">WHY THIS COMES FIRST</span><h2>Inspect the workstation before the workload</h2><p>Module 1 runs a small application. Later modules add a local Kubernetes cluster, multiple replicas, Valkey, Postgres-QL, and monitoring. Those experiments require additional headroom.</p></div><div class="prerequisite-note"><span class="setup-action-kicker">NARRATION · RECORDED</span><h2>Your narrated opening</h2><p>Play the three-and-a-half-minute opening above; the full script remains available for reference.</p><a href="#prerequisite-narration">Read the narration script ↓</a></div><div class="prerequisite-note"><span class="setup-action-kicker">IF YOUR MACHINE FALLS SHORT</span><p>Continue with the less demanding early modules and reassess before Kubernetes labs. Document the actual resource limits; don't treat them as an application failure.</p></div></aside></div>
+<section id="prerequisite-narration" class="prerequisite-script"><div class="prerequisite-script-head"><span class="eyebrow">NARRATION · SCRIPT</span><h2>Course Prerequisites</h2><p>The uploaded recording accompanies this unnumbered module, separate from the Module 0 audio.</p></div><div class="prerequisite-script-body"><p>Before we begin, there&#x27;s one practical question worth answering.</p>
+<p><strong>Can your computer support the work we&#x27;re about to do?</strong></p>
+<p>In this course, we&#x27;ll begin with a small containerized application. Then we&#x27;ll introduce more demanding environments: a local Kubernetes cluster, multiple API replicas, a Postgres-QL database, Valkey for shared state, and tools for observing performance and recovery.</p>
+<p>That progression requires more computing resources than running a single container.</p>
+<p>And we don&#x27;t want to confuse an under-resourced machine with a poorly performing application.</p>
+<p>So, before installing anything, let&#x27;s establish what your computer can reasonably handle.</p>
+<p>For Modules 0 and 1, our starting targets are four logical CPU cores, eight gigabytes of RAM, and twenty gigabytes of available storage.</p>
+<p>That should provide a useful foundation for building images, running containers, and practicing reproducibility.</p>
+<p>For the complete course, particularly the Kubernetes and performance labs, I recommend eight logical CPU cores, at least sixteen gigabytes of RAM, and forty gigabytes of free storage.</p>
+<p>Thirty-two gigabytes of RAM and additional disk space will give you more room to experiment.</p>
+<p>These are <strong>course planning targets, not official minimum requirements for any particular tool</strong>.</p>
+<p><span class="narration-pause">BREATHER · 0.6s</span></p>
+<p>You&#x27;ll also need to consider your operating system.</p>
+<p>We support four environments: Ubuntu or WSL, RHEL or Fedora, macOS, and Windows.</p>
+<p>The important distinction is where your Linux containers actually run.</p>
+<p>On a native Linux installation, the available resources generally come from the host operating system.</p>
+<p>On Windows, we&#x27;ll use WSL where appropriate. On macOS, a Linux virtual machine provides the container environment.</p>
+<p>In either case, the resources available to that Linux environment may be smaller than those reported by your computer.</p>
+<p>A laptop with sixteen gigabytes of memory doesn&#x27;t necessarily provide sixteen gigabytes to its container workloads.</p>
+<p>For the Kubernetes labs, we&#x27;ll also need appropriate virtualization support and a compatible rootless container environment.</p>
+<p><span class="narration-pause">BREATHER · 0.6s</span></p>
+<p>You&#x27;ll find a short system check on this page.</p>
+<p>Select your operating system and inspect the available CPU, memory, and storage. The commands only report information; they don&#x27;t change your configuration.</p>
+<p>Also confirm that you can obtain open-source packages and container images, and that you have the permissions needed to prepare your environment.</p>
+<p>If your machine falls below the recommended targets, that doesn&#x27;t automatically prevent you from beginning.</p>
+<p>Modules 0 and 1 are less demanding. You can complete those first, then reconsider your environment before the more resource-intensive labs.</p>
+<p>The important thing is to know your constraints before they influence your results.</p>
+<p><span class="narration-pause">BREATHER · 0.8s</span></p>
+<p>When you&#x27;ve finished, you should be able to answer three questions.</p>
+<p>What resources does your computer have?</p>
+<p>How much of that capacity will actually be available to your container environment?</p>
+<p>And what, if anything, might need to change before you reach the Kubernetes labs?</p>
+<p>Once you have those answers, you&#x27;re ready for Module 00.0.</p>
+<p>We&#x27;ll begin by establishing a known-good environment—one we can verify, reproduce, and return to when an experiment doesn&#x27;t behave as expected.</p>
+<p><strong>That&#x27;s our starting point.</strong>
+</p></div></section>
+</main>
+<script>
+(() => {
+  const page=document.querySelector('.prerequisites-page');
+  if(!page || page.dataset.activePrereq) return;
+  page.dataset.activePrereq='yes';
+  const $=id=>document.getElementById(id);
+  const osItems=[...document.querySelectorAll('.readiness-os')];
+  const chooser=$('prerequisite-assessment');
+  const fields=[$('check-cpu'),$('check-memory'),$('check-disk')];
+  const ran=$('check-ran'), reviewed=$('check-reviewed');
+  const result=$('assessment-result'), next=$('prerequisite-continue'), help=$('prerequisite-gate-help');
+  let selectedOs='';
+  osItems.forEach((item,index)=>{
+    const summary=item.querySelector('summary');
+    summary.insertAdjacentHTML('afterbegin', `<span class="os-index">${String(index+1).padStart(2,'0')}</span>`);
+    item.addEventListener('toggle',()=>{
+      if(item.open){ selectedOs=item.dataset.os||''; osItems.forEach(other=>{if(other!==item)other.open=false;}); }
+      else if(selectedOs===item.dataset.os){selectedOs='';}
+      sync();
+    });
+  });
+  function sync(){
+    const nums=fields.map(el=>Number(el.value));
+    const hasNumbers=fields.every((el,i)=>el.value.trim()!==''&&Number.isFinite(nums[i])&&nums[i]>0);
+    const complete=Boolean(selectedOs&&hasNumbers&&Number.isInteger(nums[0])&&ran.checked&&reviewed.checked);
+    next.setAttribute('aria-disabled',String(!complete));
+    next.tabIndex=complete?0:-1;
+    next.classList.toggle('ready',complete);
+    next.firstChild.textContent=complete?'Continue to Module 00.0 ':'Complete the OS check to unlock 00.0 ';
+    if(!selectedOs){ result.innerHTML='<strong>Start with your operating system</strong><p>Open one of the four OS cards, run its commands, then record your results.</p>'; }
+    else if(!hasNumbers||!Number.isInteger(nums[0])){ result.innerHTML='<strong>Ready to record your findings</strong><p>Enter whole-number logical cores and positive RAM/storage amounts in GB. Use values from your container environment, not just the host.</p>'; }
+    else{
+      const [cpu,ram,disk]=nums;
+      const full=cpu>=8&&ram>=16&&disk>=40;
+      const basic=cpu>=4&&ram>=8&&disk>=20;
+      result.innerHTML= full
+        ? '<strong>Full-course planning target met</strong><p>These reported resources meet the recommended capacity targets. Confirm virtualization, cgroup support, and actual runtime behavior during 00.2.</p>'
+        :basic
+        ? '<strong>Early modules: good starting point</strong><p>These figures meet our Modules 0–1 targets. Plan additional capacity or reduced workloads before the Kubernetes and load-testing labs.</p>'
+        :'<strong>Below the early-module planning targets</strong><p>You can still proceed after acknowledging the limits. Plan an alternate environment or adjusted workload; don’t mistake hardware constraints for broken application code.</p>';
+    }
+    help.textContent=complete?'Your self-check is recorded in this browser. The result is based on values you entered—not automated hardware verification.':!selectedOs?'First: open your OS card and run the check.':!hasNumbers?'Next: enter logical cores, RAM, and free storage.':'Finally: confirm both items above.';
+    if(complete){
+      try{localStorage.setItem('cip-prerequisites',JSON.stringify({complete:true,os:selectedOs,cpu:nums[0],ram:nums[1],disk:nums[2],at:new Date().toISOString()}));}catch{}
+    }
+  }
+  chooser.addEventListener('input',sync);
+  chooser.addEventListener('change',sync);
+  next.addEventListener('click',event=>{if(next.getAttribute('aria-disabled')==='true'){event.preventDefault();help.focus();}});
+  document.querySelectorAll('[data-copy-code]').forEach(button=>{
+    button.addEventListener('click',async()=>{
+      const code=button.closest('.code-card')?.querySelector('code')?.textContent;
+      if(!code)return;
+      try{await navigator.clipboard.writeText(code);button.textContent='Copied ✓';}
+      catch{button.textContent='Select and copy';}
+      setTimeout(()=>button.textContent='Copy ↗',1500);
+    });
+  });
+  sync();
+})();
+</script>
+</body></html>
+<style>
+.prerequisites-page{background:#f5f0e8;color:#2a342e;min-height:100vh}
+.prerequisite-shell{max-width:1320px;margin:0 auto;padding:24px clamp(16px,4vw,60px) 70px}
+.prerequisite-breadcrumb{display:flex;align-items:center;gap:12px;color:#627065;font-size:12px;margin:8px 0 23px}
+.prerequisite-breadcrumb a{color:#8c5137;text-decoration:underline;text-underline-offset:3px}
+.prerequisite-hero{border-bottom:1px solid #d9d8cf;margin:0 0 22px;padding:0 0 24px}
+.prerequisite-hero h1{font-size:clamp(32px,5vw,60px);line-height:1.06;letter-spacing:-.055em;color:#26372d;margin:12px 0}
+.prerequisite-hero>p{font-size:16px;line-height:1.75;max-width:680px;color:#546258}
+.prerequisite-status{display:flex;gap:15px;flex-wrap:wrap;margin-top:20px;font:700 10px/1.5 ui-monospace,monospace;color:#647765;letter-spacing:.07em}
+.prerequisite-columns{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(225px,.8fr);gap:24px;align-items:start}
+.prerequisite-primary{min-width:0}.prerequisite-primary .readiness{margin:0}
+.prerequisite-notes{display:grid;gap:15px}.prerequisite-note,.prerequisite-finish{border:1px solid #d7dfd4;background:#fdfcf7;padding:22px;border-radius:9px}
+.prerequisite-note h2,.prerequisite-finish h2{font-size:21px;line-height:1.25;letter-spacing:-.03em;color:#2a4536;margin:9px 0}
+.prerequisite-note p,.prerequisite-finish p{font-size:13px;line-height:1.7;color:#526258}
+.prerequisite-note a{font-size:13px;color:#a55d3b;font-weight:700}
+.prerequisite-finish{margin-top:18px}
+.prerequisite-continue{display:inline-flex;background:#35594a;color:#fff !important;padding:12px 16px;border-radius:6px;text-decoration:none;font-size:13px;font-weight:700;margin-top:10px;gap:12px}
+.prerequisite-continue:hover{background:#244c3a}
+.prerequisite-script{margin-top:36px;max-width:920px}.prerequisite-script-head{border-bottom:1px solid #d8dbd2;margin-bottom:20px}.prerequisite-script-head h2{margin:10px 0;font-size:30px;color:#284437;letter-spacing:-.03em}.prerequisite-script-head p{font-size:13px;color:#637165}
+.prerequisite-script-body{background:#fffdfa;border:1px solid #daddd4;border-radius:9px;padding:clamp(18px,4vw,32px);column-width:330px;column-gap:42px}
+.prerequisite-script-body p{font-size:14px;line-height:1.77;color:#35473c;margin:0 0 16px;break-inside:avoid}
+.narration-pause{font:700 10px ui-monospace,monospace;color:#9a6a53;background:#f0e6dd;padding:6px 8px;border-radius:5px}
+@media(max-width:830px){.prerequisite-columns{grid-template-columns:1fr}.prerequisite-notes{grid-template-columns:repeat(2,1fr)}.prerequisite-notes .prerequisite-note:last-child{grid-column:span 2}}
+@media(max-width:580px){.prerequisite-notes{grid-template-columns:1fr}.prerequisite-notes .prerequisite-note:last-child{grid-column:auto}.prerequisite-shell{padding:16px 13px 48px}.prerequisite-hero>p{font-size:14px}.prerequisite-script-body{column-count:1}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+
+/* Prerequisites intentionally louder than the editorial course shell. */
+.prerequisite-hero{position:relative;overflow:hidden;padding:25px 28px 27px!important;background:#fffcf5;border:1px solid #e9d9c8!important;border-left:7px solid #ba5636!important;border-radius:12px;margin-bottom:14px!important}
+.prerequisite-hero::after{content:'✓';position:absolute;right:18px;top:-61px;font:bold 230px/1 Georgia,serif;color:rgba(186,86,54,.055);pointer-events:none}
+.prerequisite-hero .eyebrow{font-weight:850;color:#a3472c;letter-spacing:.17em}
+.prerequisite-hero h1{position:relative;z-index:1;max-width:900px}
+.prerequisite-hero .prerequisite-tagline{max-width:720px;color:#80412b;font:750 17px/1.4 var(--body);margin:8px 0 0}
+.prerequisite-hero .prerequisite-status{gap:8px}.prerequisite-hero .prerequisite-status span{padding:6px 10px;background:#f6e2d2;border:1px solid #ead2bb;border-radius:4px;color:#94482e}
+.prerequisite-player{position:sticky;top:66px;z-index:18;background:#20362f;color:#fffdf4;border:1px solid #557262;border-radius:11px;display:flex;align-items:center;gap:24px;padding:13px 19px;margin:0 0 18px;box-shadow:0 8px 25px #253d3130}
+.prerequisite-player-copy{display:grid;min-width:220px;gap:3px}.prerequisite-player-copy strong{font-size:13px;letter-spacing:-.02em}.prerequisite-player-copy small{color:#d1e1d4;font-size:10px}
+.prerequisite-player .audio-live{color:#ffcb94;font:800 10px ui-monospace,monospace;letter-spacing:.12em}.audio-live span{color:#f4a060}
+.prerequisite-player audio{flex:1;min-width:140px;height:38px;accent-color:#ba5636}
+.prerequisite-columns{grid-template-columns:minmax(0,1.7fr) minmax(245px,.8fr)}
+.prerequisite-notes{position:sticky;top:151px}
+.prerequisite-notes .prerequisite-note:first-child{background:#253d34;border-color:#355947}
+.prerequisite-notes .prerequisite-note:first-child h2,.prerequisite-notes .prerequisite-note:first-child p{color:#fff9ed}
+.prerequisite-notes .prerequisite-note:first-child .setup-action-kicker{color:#ffd0aa}
+.prerequisite-notes .prerequisite-note{border-radius:10px}
+.prerequisite-assessment{margin:18px 0;padding:23px;border:1px solid #d0dfd0;border-radius:11px;background:#edf1e9}
+.assessment-kicker{font:850 10px/1.4 ui-monospace,monospace;letter-spacing:.12em;color:#a2492e}
+.prerequisite-assessment h3{font:750 clamp(22px,2vw,28px)/1.18 var(--display);letter-spacing:-.035em;color:#2e4636;margin:8px 0}
+.prerequisite-assessment p{font-size:12px;line-height:1.65;color:#4b5e50}
+.assessment-fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:17px 0}
+.assessment-fields label{font-size:11px;font-weight:750;color:#304638;display:grid;gap:6px}
+.assessment-fields input{width:100%;min-width:0;padding:13px 11px;border:1px solid #b8c9ba;border-radius:6px;background:#fffdf8;color:#233e2c;font:650 16px ui-monospace,monospace}
+.assessment-fields input:focus-visible,.assessment-confirm input:focus-visible,.prerequisite-continue:focus-visible{outline:3px solid #ad5435;outline-offset:2px}
+.assessment-confirm{display:grid;gap:13px;margin:17px 0}
+.assessment-confirm label{display:flex;align-items:flex-start;gap:10px;font-size:12px;line-height:1.55;color:#344f3e;font-weight:550}
+.assessment-confirm input{width:17px;height:17px;flex-shrink:0;accent-color:#2e654c;margin-top:2px}
+.assessment-result{padding:14px 16px;border-left:4px solid #ba6945;background:#fffaf3;border-radius:5px}
+.assessment-result strong{color:#334d3c;font-size:13px}.assessment-result p{margin:5px 0 0}
+.prerequisite-finish{background:#fff8ed;border-color:#dfc7ad;border-radius:11px}
+.prerequisite-finish .setup-action-kicker{color:#9b4329;font-weight:900}
+.prerequisite-continue{font-size:14px;justify-content:center;min-height:46px;max-width:100%;background:#a6492d}
+.prerequisite-continue.ready{background:#285a43}.prerequisite-continue.ready:hover{background:#19432e}
+.prerequisite-continue[aria-disabled=true]{opacity:.58;pointer-events:none;cursor:not-allowed;filter:grayscale(.2)}
+.prerequisite-gate-help{font-size:11px!important;color:#78513a!important;margin-bottom:0}
+.prerequisite-script{margin-top:25px}
+.prerequisite-script-body{column-width:420px}
+.readiness-os.selected,.readiness-os[open]{border-color:#ba7659!important;box-shadow:0 0 0 1px #ba765921}
+.os-index{font:800 10px ui-monospace,monospace;color:#a34d30;padding:4px 7px;background:#f9e8d9;border-radius:4px;margin-right:4px}
+@media(max-width:860px){.prerequisite-notes{position:static}.prerequisite-player{top:66px}.prerequisite-columns{grid-template-columns:1fr}}
+@media(max-width:600px){.prerequisite-hero{padding:20px 17px!important}.prerequisite-hero .prerequisite-tagline{font-size:14px}.prerequisite-player{top:60px;display:block;padding:12px}.prerequisite-player audio{display:block;width:100%;margin-top:8px}.prerequisite-player-copy{min-width:0}.assessment-fields{grid-template-columns:1fr}.prerequisite-assessment{padding:16px}}
+
+</style>

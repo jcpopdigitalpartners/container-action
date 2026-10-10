@@ -1,0 +1,41 @@
+---
+const base=import.meta.env.BASE_URL.replace(/\/?$/, '/');
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="theme-color" content="#f5f0e8"/>
+<title>Shared state across Kubernetes Pods · Containers in Practice</title>
+<meta name="description" content="See the relationship between clients, a Kubernetes Service, API replicas and Valkey shared state."/>
+<style>
+:root{font-family:Inter,ui-sans-serif,system-ui,-apple-system,sans-serif;color:#252d2b;background:#f5f0e8}
+*{box-sizing:border-box}body{margin:0}main{max-width:1060px;padding:clamp(16px,4vw,45px);margin:0 auto}
+a{color:#8e422c}a:focus-visible,video:focus-visible{outline:3px solid #b05a40;outline-offset:4px}
+.top{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:15px;padding-bottom:22px;border-bottom:1px solid #d9d0c2}
+.tag{font:700 11px ui-monospace,monospace;letter-spacing:.13em;text-transform:uppercase;color:#415d4a}h1{font-size:clamp(30px,4vw,54px);letter-spacing:-.05em;line-height:1.11;margin:18px 0 12px;max-width:880px}
+.lede{max-width:750px;font-size:16px;line-height:1.8;color:#4f6155;margin:0 0 26px}
+.player{border-radius:16px;overflow:hidden;background:#fdfbf7;border:1px solid #d9d0c2;box-shadow:0 16px 55px #514b3e17}
+video{display:block;width:100%;aspect-ratio:16/9;background:#e9e5dd}
+.footer{padding:15px 21px;font-size:12px;color:#56665d;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+.explainer{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-top:26px}
+.explainer>div{background:#fdfbf7;border:1px solid #ddd7c9;border-radius:10px;padding:19px;line-height:1.65;font-size:13px;color:#4f5d50}
+.explainer strong{display:block;color:#344736;font-size:14px;margin-bottom:7px}
+@media(max-width:650px){.explainer{grid-template-columns:1fr}}
+</style>
+</head>
+<body><main>
+<header class="top"><span class="tag">CONTAINERS IN PRACTICE · MODULE 2.3</span><a href={base+'#m2-shared-state'}>← Back to the course</a></header>
+<h1>Different Pods. The same shared state.</h1>
+<p class="lede">Watch the client → Kubernetes Service → API Pods → Valkey architecture develop. The API Service forwards client traffic; an API Pod contacts Valkey only when a request needs shared state.</p>
+<section class="player" aria-label="Shared state network animation">
+<video controls playsinline preload="metadata" poster={base+'video/iso-mod2-poster.jpg'} aria-label="Isometric animation of Kubernetes API scaling and Valkey shared state"><source src={base+'video/iso-mod2-animation.mp4'} type="video/mp4"/>Your browser does not support video playback. <a href={base+'video/iso-mod2-animation.mp4'}>Open the MP4</a>.</video>
+<div class="footer"><span>14 seconds · MP4 · Learner resource</span><a href={base+'video/iso-mod2-animation.mp4'} download>Save the animation ↓</a></div>
+</section>
+<div class="explainer">
+<div><strong>1 · Client to Service</strong>Clients use one stable Service endpoint. The Service's networking implementation forwards connections to eligible API Pods.</div>
+<div><strong>2 · Service to Pods</strong>The application replicas handle work independently. A subsequent client connection may reach a different Pod.</div>
+<div><strong>3 · Pods to Valkey</strong>Only requests that require shared state cause a Pod to read or write Valkey. Not every request hits the datastore.</div>
+</div>
+</main></body></html>

@@ -1,0 +1,194 @@
+/* Containers in Practice — Modern Editorial production theme.
+   Core palette: parchment, charcoal, sage, and terracotta.
+   Loaded after site.css to preserve structure and behavior. */
+:root{
+  color-scheme:light;
+  --forest:#283330;--forest2:#35413b;--mist:#eee8dd;--sage:#839481;
+  --sage-dark:#49654f;--teal:#496c61;--paper:#fbf8f1;
+  --ink:#252d2b;--muted:#56655e;--line:#d9d0c2;
+  --ed-paper:#f5f0e8;--ed-cream:#fdfbf7;--ed-linen:#e2d9c9;
+  --ed-dark:#252d2b;--ed-dark2:#303a35;--ed-sage:#778b78;
+  --ed-deep-sage:#415d4a;--ed-terra:#b05a40;--ed-terra-dark:#8e422c;
+  --ed-neutral:#5c665d;
+}
+html{background:#f5f0e8;scrollbar-color:#b7ae9e #eee7da}
+body{
+  color:var(--ed-dark);
+  background:
+    radial-gradient(ellipse 61% 63% at 6% 7%,rgba(149,160,137,.16),transparent 69%),
+    radial-gradient(ellipse 53% 60% at 92% 33%,rgba(205,155,122,.105),transparent 70%),
+    radial-gradient(ellipse 72% 54% at 37% 100%,rgba(185,172,149,.12),transparent 71%),
+    linear-gradient(118deg,#f3eee4,#faf7ef 42%,#f2e9df 74%,#f6f1e9);
+  background-size:155% 155%;background-attachment:fixed;
+  animation:editorial-drift 42s ease-in-out infinite alternate;
+}
+@keyframes editorial-drift{0%{background-position:0% 38%}50%{background-position:60% 55%}100%{background-position:100% 69%}}
+::selection{background:#c2cfc0;color:#27382e}
+a:focus-visible,button:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #b65e40;outline-offset:3px}
+/* chrome and global furniture */
+.masthead{background:#fcfaf5ec;border-bottom:1px solid #dcd3c6;box-shadow:0 4px 16px #72634b15;backdrop-filter:blur(14px)}
+.brand-mark,.masthead-center,.masthead-right{color:#36423a}
+.brand-mark em{color:#778773}.brand-glyph i{background:#b05a40}
+.pill-outline{background:#e9eee6;border-color:#b3c0b0;color:#405c48}
+.connected-dot,.signal-led,.tiny-live i,.beat-dot,.resource-led{background:#6f9776;box-shadow:0 0 0 4px #68967819}
+.preview-note{background:#e6ded0!important;color:#3c473f!important;border-bottom:1px solid #d3c7b7!important}
+.preview-note a{color:#83402c!important}
+.theme-utility{display:inline-flex;vertical-align:middle;align-items:center;gap:8px;float:right;margin-left:12px}
+.theme-motion{appearance:none;background:#f8f4ed;color:#33443a;border:1px solid #abae9d;padding:5px 9px;border-radius:5px;font:600 10px var(--mono);cursor:pointer}
+.theme-motion:hover{background:#e9e3d7}
+body.motion-off{animation:none!important;background-position:40% 50%!important}
+body.motion-off .welcome-panel::before{animation:none!important}
+.theme-palette{display:inline-flex;gap:4px;vertical-align:middle;margin-right:9px}
+.theme-palette i{height:10px;width:10px;display:inline-block;border-radius:2px;border:1px solid #514e4540}
+.theme-palette i:nth-child(1){background:#f5f0e8}.theme-palette i:nth-child(2){background:#e2d9c9}.theme-palette i:nth-child(3){background:#252d2b}.theme-palette i:nth-child(4){background:#778b78}.theme-palette i:nth-child(5){background:#b05a40}
+/* Persistent dark audio player, independently scrolling nav */
+.narration-panel{background:#28332f;color:#f9f6ee;border-color:#45544c;box-shadow:0 17px 42px #27302624}
+.player-dock{background:linear-gradient(155deg,#303d36,#252f2b 83%);border-bottom:1px solid #516055;box-shadow:0 11px 20px -17px #121b13;position:relative;z-index:2}
+.panel-meta,.playing-label,.nav-head,.group-head{color:#bccab8}
+.player-dock h2{color:#fffdf5}
+.player-dock #now-subtitle{color:#d1ddd1}
+.play-button{background:#f1d9bd;color:#29332e;box-shadow:0 4px 20px #d4b68d2d}
+.play-button:hover{background:#ffe9ce}
+.wave-bar{background:#687970}.wave-bar.heard{background:#f0b08d}.wave-bar.current{background:#ffdec1}
+.time-row{color:#c8d6cb}
+.player-tools button{background:#425046;border-color:#687d6e;color:#f3f6ee}
+.player-tools button:hover{background:#506154}
+.player-tools .current-recording,.nav-footer{color:#bdc9ba}
+.chapter-scroll{background:#29352f;scrollbar-color:#859a88 transparent}
+.chapter-scroll::-webkit-scrollbar-thumb,.resources-inner::-webkit-scrollbar-thumb{background:#92a18e}
+.module-picker{background:#1e2824}
+.module-picker button{color:#d0dbce}
+.module-picker button.chosen{background:#e9d2b7;color:#2d332e}
+.chapter-button{color:#e5ece2}
+.chapter-button:hover{background:#3c4c43}
+.chapter-button.selected{background:#465a4c;border:1px solid #93a896;color:#fffdf4}
+.chapter-text small,.chapter-button time,.chapter-code{color:#c1d0bf}
+.selected .chapter-code{color:#ffc59e}
+.nav-divider{background:#4a5c4f}
+/* Editorial hero: charcoal and warm ivory with subtle moving highlights */
+.welcome-panel{background:linear-gradient(120deg,#35423a 0%,#2b3631 55%,#424039 100%);border:1px solid #53645a;box-shadow:0 14px 32px #383b3124;color:#fbf8ee}
+.welcome-panel::before{content:"";position:absolute;inset:-30%;pointer-events:none;z-index:0;transform:translate3d(0,0,0);
+  background:radial-gradient(ellipse 44% 43% at 37% 32%,#6a88713c,transparent 68%),radial-gradient(ellipse 30% 38% at 83% 75%,#b66b4933,transparent 72%);
+  animation:editorial-glow 36s ease-in-out infinite alternate}
+@keyframes editorial-glow{0%{transform:translate3d(-3%,-2%,0)}100%{transform:translate3d(6%,4%,0)}}
+.welcome-panel::after{opacity:.32}
+.hero-topline,.hero-bottom,.eyebrow{color:#d9e2d2}
+.hero-copy h1{font-family:Georgia,'Iowan Old Style','Times New Roman',serif;font-weight:500;letter-spacing:-.053em;line-height:1.06;color:#fffaf0}
+.hero-copy h1 em{color:#e8b899}
+.hero-copy p{color:#e6e5da}
+.hero-actions button{background:#eec7a4;color:#29372f}
+.hero-actions button:hover{background:#ffe0c1}
+.hero-actions a{color:#f1e9d9}
+.hero-bottom{border-color:#81918470}
+.hero-corner{border-color:#a8b4a0;color:#efdfcc}
+.orbit{border-color:#b5c2ae5b}.orbit.inner{border-color:#e8c4a875}
+.orbit-core{background:#6984732b;border-color:#a9bdab}.orbit-core span{color:#e8ceb6}.orbit-core b{color:#fff}
+.orbit-point{background:#db9d7c;box-shadow:0 0 14px #e8b59375}
+/* Warm paper content, clean editorial hierarchy */
+.reading-guide{color:#5c665c}
+.lesson-beat{background:#fffdfa;border:1px solid #d9d1c3;box-shadow:0 12px 30px #73695012;color:#27332c}
+.lesson-beat :is(h1,h2,h3,h4,strong,b){color:#28342d}
+.lesson-beat :is(p,li){color:#46554b}
+.beat-top,.beat-time,.beat-overline,.beat-kicker,.beat-meta{color:#536d58}
+.beat-heading h2{color:#28352d;letter-spacing:-.045em}
+.beat-time{color:#8f513c}
+.idea-strip{border-color:#d7dbcf}
+.idea-strip>span{color:#5a795e}.idea-strip strong{color:#2f4035}
+.verify-strip small{color:#637567}.verify-strip p{color:#4c5d51}
+.verify-icon,.lab-icon{background:#e5ece2;color:#405f47}
+.beat-foot{border-color:#ddd7ca;color:#647568}.beat-foot button{color:#8c432e}
+.lesson-beat [data-emphasis].lit{color:#8f402b;text-shadow:none}
+.beat-heading [data-emphasis],.idea-strip [data-emphasis],.verify-strip [data-emphasis]{background-image:linear-gradient(transparent 78%,#d8e3ce 78%)}
+.concept-visual,.shared-state-architecture{background:#f2f0e9;border:1px solid #d4d6cb;color:#26362d}
+.concept-visual .flow-node,.concept-visual .diagram-box,.concept-visual .storage-case{background:#fdfaf4;border-color:#bdc7ba;color:#34473b}
+.concept-visual .flow-node :is(strong,small),.concept-visual .diagram-box :is(strong,small){color:#34483a}
+.flow-count{color:#915039}
+.shared-state-architecture figcaption{color:#566257}.shared-state-architecture figcaption span{color:#506d53}
+.shared-state-architecture video{background:#e9e5dd}
+.course-video-header{background:#e9e6dc}.course-video-header span{color:#586c59}.course-video-header strong{color:#2c4231}
+.course-video-header a{color:#98533b}
+/* Setup guide and lab disclosures */
+.lab-disclosure,.checkpoint-list,.preflight-expectations{background:#f4f3ec;border-color:#d5d8cc;color:#36463a}
+.lab-disclosure summary,.install-step summary{color:#334435}
+.lab-disclosure summary small,.lab-inner>p,.lab-note{color:#5b6a5b}
+.disclosure-plus{color:#a05940}
+.checkpoint-list .checkpoint-heading span{color:#526c53}
+.check-row{color:#344738;border-color:#d6ded2}
+.check-icon{border-color:#819886}
+.check-row input:checked+.check-icon{background:#587962;border-color:#587962}
+.check-row input:checked~span:not(.check-icon){color:#354d3b}
+.code-card{background:#202b29;border:1px solid #52645a}
+.code-head{background:#35423d;color:#e8ede2;border-color:#4e6257}
+.code-head button{background:#52655a;color:#fffdf7;border:1px solid #768b7c}
+.code-card pre{color:#f2f1e8}
+.os-footnote{color:#526354}
+.installer{border-color:#d5d6c9}
+.installer-head h3,.checkpoint-heading strong{color:#2d3e31}
+.installer-head small,.installer-head>span{color:#697969}
+.platform-tabs{background:#e9e9df;scrollbar-color:#a7afa3 transparent}
+.platform-tabs button{color:#415d47}
+.platform-tabs button[aria-selected='true']{background:#466c50;color:#fff;box-shadow:inset 0 0 0 1px #32583b}
+.platform-panel>p:first-child{color:#455947}
+.install-step{background:#fcfaf6;border:1px solid #d5ddcf}
+.install-step>summary span:first-child,.install-step>summary span:last-child{color:#85513c}
+/* Contextual Resources: make instructional guidance unmistakably distinct */
+.resources-panel{background:#faf8f2;border:1px solid #d6d0c4;box-shadow:0 17px 38px #514b3e15;color:#2d3930}
+.resources-inner{scrollbar-color:#c7bdab transparent}
+.resources-top,.resource-label,.resource-lesson{color:#5e7665}
+.resources-panel h2{color:#2b3930}
+.resources-panel #resources-subheading{color:#5b675d}
+.resources-panel .resource-separator{background:#ddd7c9}
+.resource-purpose{background:#e7eee3;border:1px solid #cad8c8}
+.resource-purpose small{color:#526d56}.resource-purpose strong{color:#2b4b36}
+.resource-activity,.resource-help{background:#fffdf9;border:1px solid #ddd7cb}
+.resource-activity summary b,.resource-help summary b{color:#344736}
+.resource-activity summary>span:last-child,.resource-help summary>span:last-child{color:#7b5947}
+.resource-type{color:#54725b}
+.resource-activity-body,.resource-help>p{color:#4f5d50}
+.resource-evidence{border-color:#dfdfd5}.resource-evidence b{color:#496d50}
+.resource-help{background:#f5f1e8}
+.resource-card{background:#fffdf9;border:1px solid #ddd7c9}
+.resource-card:hover{border-color:#bd9d89;box-shadow:0 4px 14px #674e3d1c}
+.resource-card small{color:#506f58}.resource-card b{color:#2c3f31}.resource-card em{color:#657166}
+.resource-arrow{color:#914a32}
+.resource-note>span,.resource-note p{color:#566b5b}
+.quick-actions a{color:#8a492f;border-color:#d8c3b4}
+.mini-map{border-color:#d6d6ca}.mini-map>span,.mini-map small{color:#627b64}
+.mini-map>div{background:#e2e2d8}.mini-progress{background:#9a634a}
+.resource-video-feature{background:#f0f0e7;border-color:#c6cfbd}
+.resource-video-head{color:#466a4e}.resource-video-feature video{background:#e7e4dc}
+.resource-video-link{color:#8c4630}.resource-pacing-button{background:#e5eddf;border-color:#b9cbb8;color:#3b6545}
+.resource-pacing-button:hover{background:#d6e3d1}
+.resource-video-cue{box-shadow:0 0 0 2px #b9674e6b}
+.module0-next-action{background:linear-gradient(145deg,#f4f0e6,#eaf0e5);border-color:#c7d2c5}
+.setup-route{color:#647767;border-color:#d2d8cb}.setup-route span b,.setup-route span.is-now{color:#95513b}
+.setup-action-kicker{color:#486b51}
+.setup-action-content h3,.preflight-expectations h3{color:#2e3e32}
+.setup-action-content p,.install-to-verify p{color:#526459}
+.setup-primary-action,.install-to-verify button{background:#405d49!important;border:1px solid #405d49!important;color:#fff!important}
+.setup-primary-action:hover,.install-to-verify button:hover{background:#2d4c39!important}
+.install-to-verify{background:#edf2e9;border-color:#cbd6cb}
+.preflight-results>div{background:#fffefa;border-color:#d7dfd4}
+.preflight-results b{color:#547256}.preflight-results strong{color:#2e4936}
+.preflight-results p{color:#4f6155}.preflight-results code{color:#475a49}
+.course-footer{color:#536557}.course-footer strong{color:#2e4134}.course-footer p,.course-footer>span{color:#65776a}
+/* small viewport navigation remains accessible */
+@media(max-width:1000px){.mobile-actions{background:#efe9df!important;border-bottom:1px solid #d7cdbe!important}.mobile-actions button{background:#fffdf9!important;border-color:#c9c9bb!important;color:#37503c!important}}
+@media(prefers-reduced-motion:reduce){body,.welcome-panel::before{animation:none!important}}
+
+/* Production masthead motion preference, intentionally compact. */
+.masthead-right .theme-motion{float:none;margin-left:0;white-space:nowrap;background:#f8f4ed;border-color:#bdb6aa;color:#35473c;letter-spacing:0;font:600 10px var(--mono);border-radius:5px}
+.masthead-right .theme-motion:hover{background:#ebe4d7}
+@media(max-width:920px){.masthead-right .theme-motion{padding:6px;font-size:9px}}
+@media(max-width:590px){.masthead-right .theme-motion{font-size:0;padding:7px;min-width:30px}.masthead-right .theme-motion::before{content:'◌';font-size:15px}}
+
+/* One continuous chapter: Checkpoint 0 plus handoff to Module 1. */
+.checkpoint-handoff{margin:18px 0 26px;padding:23px 24px;background:linear-gradient(125deg,#f2efe4,#e8ede3);border:1px solid #bdcbbb;border-radius:12px;color:#252d2b;}
+.checkpoint-handoff h3{font:700 clamp(20px,2vw,25px)/1.2 ui-sans-serif,system-ui,sans-serif;letter-spacing:-.03em;color:#25312c;margin:10px 0;}
+.checkpoint-handoff p{font-size:14px;line-height:1.65;color:#424c44;max-width:62ch;margin:0 0 16px;}
+.checkpoint-handoff .handoff-path{display:flex;gap:9px;align-items:center;flex-wrap:wrap;color:#476c55;font-size:12px;font-weight:700;margin:16px 0;}
+.checkpoint-handoff .handoff-path span:nth-child(even){font-weight:400;color:#a17158;}
+.checkpoint-handoff .setup-primary-action{display:inline-flex;align-items:center;gap:10px;}
+
+/* The handoff is highlighted near 02:43 without changing chapters or scrolling. */
+.checkpoint-handoff [data-emphasis="handoff"].lit{color:#a55434;text-decoration:underline;text-decoration-color:#d69b79;text-underline-offset:5px;}

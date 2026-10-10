@@ -1,0 +1,18 @@
+---
+import { readinessChecks } from '../data/readiness';
+---
+        <div class="readiness" aria-label="Computer requirements for this course">
+          <div class="readiness-intro"><div><span class="setup-action-kicker">BEFORE YOU INSTALL · MACHINE READINESS</span><h3>Can your computer support the labs?</h3><p>Check your available resources before selecting a toolchain. The later Kubernetes exercises run several services simultaneously and require more headroom than Module 1.</p></div><span class="readiness-label">2-MIN CHECK</span></div>
+          <div class="readiness-compare" role="table" aria-label="Planning targets for learner computers">
+            <div class="readiness-row readiness-head" role="row"><span role="columnheader">RESOURCE</span><span role="columnheader">MODULES 0–1</span><span role="columnheader">FULL COURSE · RECOMMENDED</span></div>
+            <div class="readiness-row" role="row"><strong role="cell">CPU</strong><span role="cell">4 logical cores</span><span role="cell">8 logical cores</span></div>
+            <div class="readiness-row" role="row"><strong role="cell">RAM</strong><span role="cell">8 GB</span><span role="cell">16–32 GB</span></div>
+            <div class="readiness-row" role="row"><strong role="cell">Free storage</strong><span role="cell">20 GB</span><span role="cell">40–80 GB</span></div>
+            <div class="readiness-row" role="row"><strong role="cell">Platform</strong><span role="cell">64-bit OS</span><span role="cell">Linux containers and virtualization where applicable</span></div>
+          </div>
+          <p class="readiness-caveat">These are <strong>course planning targets</strong>, not official product minimums. On an 8 GB machine, start with Modules 0–1; plan additional RAM or a smaller workload for Kubernetes, monitoring, and load-testing activities.</p>
+          <div class="readiness-checks"><h4>01 / Choose your OS and run the test</h4><p>Choose the system you're using and run its read-only checks. <strong>WSL and macOS learners:</strong> check both the host and the Linux guest before running cluster labs.</p>
+            {readinessChecks.map(check=><details class="readiness-os" data-os={check.id}><summary><span>{check.label}</span><span aria-hidden="true">＋</span></summary><div class="readiness-os-body"><p>{check.description}</p><div class="code-card"><div class="code-head"><span>READ-ONLY SYSTEM CHECK</span><button type="button" data-copy-code aria-label={`Copy ${check.label} system checks`}>Copy ↗</button></div><pre><code>{check.code}</code></pre></div><p class="readiness-footnote">{check.note}</p></div></details>)}
+          </div>
+          <p class="readiness-links">Verify prerequisites: <a href="https://kind.sigs.k8s.io/docs/user/rootless/" target="_blank" rel="noopener noreferrer">kind rootless support ↗</a> · <a href="https://learn.microsoft.com/en-us/windows/wsl/wsl-config" target="_blank" rel="noopener noreferrer">WSL VM allocations ↗</a> · <a href="https://lima-vm.io/docs/" target="_blank" rel="noopener noreferrer">Lima VM configuration ↗</a></p>
+        </div>

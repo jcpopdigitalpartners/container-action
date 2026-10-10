@@ -1,0 +1,29 @@
+---
+interface Props { type: string; labels: string[]; }
+const { type, labels } = Astro.props;
+const network = type === 'network';
+const storage = type === 'storage';
+const config = type === 'config';
+---
+<div class:list={['concept-visual',`visual-${type}`]} aria-label={`${labels.join(' to ')} diagram`} role="img">
+  <div class="concept-grid" aria-hidden="true"></div>
+  {network ? (
+    <div class="diagram-network" aria-hidden="true">
+      <div class="diagram-box node-api"><span class="node-label">SERVICE A</span><strong>API</strong><small>:3000</small></div>
+      <div class="network-line"><span class="network-packet"></span><small>course-net</small></div>
+      <div class="diagram-box node-db"><span class="node-label">SERVICE B</span><strong>PostgreSQL</strong><small>:5432</small></div>
+    </div>
+  ) : storage ? (
+    <div class="diagram-storage" aria-hidden="true">
+      <div class="storage-case"><span>01 · EPHEMERAL</span><div class="storage-stack"><b>Container</b><i>✕</i></div><small>Replace container → data lost</small></div>
+      <div class="storage-case strong"><span>02 · PERSISTENT</span><div class="storage-stack"><b>Container</b><i class="good">↔</i><b>Volume</b></div><small>Replace container → data retained</small></div>
+    </div>
+  ) : config ? (
+    <div class="diagram-config" aria-hidden="true"><div class="image-artifact"><span>IMMUTABLE</span><strong>OCI image</strong><small>one artifact</small></div><div class="fork"/><div class="config-branches"><div><span>01</span><b>Development</b><small>config A</small></div><div><span>02</span><b>Staging</b><small>config B</small></div></div></div>
+  ) : (
+    <div class="diagram-flow" aria-hidden="true">
+      {labels.map((label,i)=>(<div class:list={['flow-node',{'primary-node':i===labels.length-1}]}><span class="flow-count">{String(i+1).padStart(2,'0')}</span><strong>{label}</strong><span class="node-led"></span></div>))}
+    </div>
+  )}
+  <div class="diagram-footer"><span class="visual-pulse"></span><span>WORKLOAD MODEL</span><span class="diagram-footer-line"></span><span>INTERACTIVE SYSTEMS</span></div>
+</div>

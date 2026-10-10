@@ -1,0 +1,299 @@
+[
+  {
+    "id": "3-0",
+    "num": "3.0",
+    "title": "When a working system fails",
+    "kicker": "Availability is more than a running process",
+    "heading": "Restarting a container is not the same as recovering a service.",
+    "summary": "Revisit the API, Valkey, and Postgres-QL system. Distinguish replacement of disposable compute from continuity of client work and durable records.",
+    "question": "If an API Pod disappears, which parts of the system can actually recover?",
+    "explore": "Sketch three failure consequences: an interrupted request, a replacement Pod, and an unavailable datastore.",
+    "observe": "The Pod controller may restore the desired replica count, but application success and data safety require separate evidence.",
+    "confusion": "All Pods show Ready. Does that prove the application recovered?",
+    "recover": "Compare requests and database behavior from the client perspective. Ready is one signal, not a complete recovery test.",
+    "video": {
+      "title": "Automating Chaos with LitmusChaos",
+      "creator": "Cloud Native Computing Foundation",
+      "url": "https://www.youtube.com/watch?v=618rXhCp03Y",
+      "note": "Optional perspective: observe how engineers define failure experiments before asserting resilience.",
+      "duration": "Deep dive"
+    },
+    "docs": [
+      {
+        "title": "Pod lifecycle",
+        "url": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+        "why": "Understand why Pod replacement and process restart are different events."
+      },
+      {
+        "title": "Principles of chaos engineering",
+        "url": "https://principlesofchaos.org/",
+        "why": "Frame experiments around hypotheses and measured behavior."
+      }
+    ],
+    "lab": "FOUNDATION"
+  },
+  {
+    "id": "3-1",
+    "num": "3.1",
+    "title": "What survives a replacement?",
+    "kicker": "Separate compute from state",
+    "heading": "Every layer has its own lifecycle.",
+    "summary": "Inspect the container filesystem, Pod lifetime, runtime configuration, and persistent data before replacing an API instance.",
+    "question": "What state disappears with a Pod—and what should survive?",
+    "explore": "Before removing anything, identify which values come from the image, environment, process memory, and persistent storage.",
+    "observe": "Replacement restores code and configuration, but not arbitrary writes in a disposable container layer.",
+    "confusion": "The Pod returned to Running; I expected all state to return too.",
+    "recover": "Separate memory, writable layers, ephemeral volumes, and PersistentVolumeClaims. Compare where the record was stored.",
+    "video": {
+      "title": "Kubernetes Pods — Restart Policy, Lifecycle and kubectl Inspection",
+      "creator": "DevOps Made Easy",
+      "url": "https://www.youtube.com/watch?v=x51DTa8_sY4",
+      "note": "Watch for: lifecycle transitions, inspectable events, and why restart behavior does not prove data durability.",
+      "duration": "Optional watch"
+    },
+    "docs": [
+      {
+        "title": "Pod lifecycle and restart policy",
+        "url": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/",
+        "why": "Reference for Pod states and container restarts."
+      },
+      {
+        "title": "Kubernetes volumes overview",
+        "url": "https://kubernetes.io/docs/concepts/storage/volumes/",
+        "why": "Distinguish ephemeral volumes from durable storage."
+      }
+    ],
+    "lab": "LAB 3A — PREDICT"
+  },
+  {
+    "id": "3-2",
+    "num": "3.2",
+    "title": "Give data a lifecycle of its own",
+    "kicker": "PersistentVolumes, claims and storage classes",
+    "heading": "A persistent claim decouples storage from Pod replacement.",
+    "summary": "Explore PersistentVolumes, PersistentVolumeClaims, StorageClasses, and StatefulSets. In a local kind cluster, persistent storage is not equivalent to node-level high availability.",
+    "question": "If the database Pod moves, where is its data actually stored?",
+    "explore": "Trace the relationship: database container → mounted volume → claim → volume → underlying storage.",
+    "observe": "A claim may be rebound to a replacement workload, but local storage remains vulnerable to loss of its backing node.",
+    "confusion": "A bound PersistentVolumeClaim means the data is highly available.",
+    "recover": "Inspect the StorageClass, provisioner, access mode, reclaim policy, and physical backing. Bound is not the same as redundant.",
+    "video": {
+      "title": "Kubernetes Volumes: PV, PVC and StorageClass",
+      "creator": "TechWorld with Nana",
+      "url": "https://www.youtube.com/watch?v=0swOh5C3OVM&t=543s",
+      "note": "Start at 09:03 for the claim abstraction; return to 17:12 for dynamic provisioning.",
+      "duration": "Selected segments"
+    },
+    "docs": [
+      {
+        "title": "Persistent Volumes",
+        "url": "https://kubernetes.io/docs/concepts/storage/persistent-volumes/",
+        "why": "PV/PVC behavior, access modes, and reclaim policies."
+      },
+      {
+        "title": "StatefulSets",
+        "url": "https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/",
+        "why": "Understand stable identity and storage associations."
+      }
+    ],
+    "lab": "LAB 3A — PRESERVE"
+  },
+  {
+    "id": "3-3",
+    "num": "3.3",
+    "title": "Persistence is not a backup",
+    "kicker": "Backup, restore and recovery objectives",
+    "heading": "A backup becomes credible when you successfully restore it.",
+    "summary": "Use logical Postgres-QL backup concepts to define an independent restore test, then contrast persistence with recovery point and recovery time objectives.",
+    "question": "What evidence shows that the backup can restore useful data?",
+    "explore": "Design a disposable target database and a known record-count check. Predict what a backup cannot undo about a subsequent bad write.",
+    "observe": "Restored data is independently queryable and meets an explicitly stated expected result.",
+    "confusion": "A dump file exists; should I call the backup successful?",
+    "recover": "Treat a file as unverified until it is restored to a separate environment and inspected. Check dump format and tool compatibility.",
+    "video": {
+      "title": "PostgreSQL Backup: pg_dump and pg_restore",
+      "creator": "Josue Kula",
+      "url": "https://www.youtube.com/watch?v=BZ73M-vU4g4&t=697s",
+      "note": "Watch the destructive change and restoration demonstration from around 11:37; do not copy commands blindly.",
+      "duration": "Selected segment"
+    },
+    "docs": [
+      {
+        "title": "PostgreSQL SQL dump backup",
+        "url": "https://www.postgresql.org/docs/current/backup-dump.html",
+        "why": "Official logical backup mechanisms and limitations."
+      },
+      {
+        "title": "PostgreSQL backup approaches",
+        "url": "https://www.postgresql.org/docs/current/backup.html",
+        "why": "Compare SQL dumps, filesystem backups, and WAL archiving."
+      }
+    ],
+    "lab": "LAB 3A — RESTORE"
+  },
+  {
+    "id": "3-4",
+    "num": "3.4",
+    "title": "Healthy, ready and alive",
+    "kicker": "Readiness, liveness and startup probes",
+    "heading": "A running process may be unable to serve a request.",
+    "summary": "Compare how readiness changes traffic eligibility, liveness can trigger a restart, and startup gates initial checks. Avoid turning temporary dependency outages into restart storms.",
+    "question": "When should Kubernetes remove a Pod from traffic instead of restarting it?",
+    "explore": "Predict behavior for three conditions: slow startup, temporary database failure, and unrecoverable deadlock.",
+    "observe": "Probe outcomes lead to different actions. Readiness failure and liveness failure are not interchangeable.",
+    "confusion": "A readiness failure restarts the container.",
+    "recover": "Readiness does not, by itself, restart the container. Examine probe type, events, and configured thresholds.",
+    "video": {
+      "title": "Kubernetes Probes Explained: Liveness, Readiness, Startup",
+      "creator": "VK Seth — AWS Devops",
+      "url": "https://www.youtube.com/watch?v=8quZUZWm4oM",
+      "note": "Focus on which signal controls traffic eligibility and which one can restart a container.",
+      "duration": "Concept + examples"
+    },
+    "docs": [
+      {
+        "title": "Configure health probes",
+        "url": "https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/",
+        "why": "Canonical definitions and probe configuration behavior."
+      },
+      {
+        "title": "Debug running Pods",
+        "url": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/",
+        "why": "Events and Pod conditions for diagnosing probe failures."
+      }
+    ],
+    "lab": "LAB 3B — DETECT"
+  },
+  {
+    "id": "3-5",
+    "num": "3.5",
+    "title": "Give requests time to finish",
+    "kicker": "Shutdown signals and draining",
+    "heading": "Planned termination should not behave like a surprise crash.",
+    "summary": "Inspect termination signals, grace periods, in-flight requests, and asynchronous removal of terminating endpoints. Avoid promising that all client requests will always succeed.",
+    "question": "What happens to a request that is in flight when its Pod begins terminating?",
+    "explore": "Compare a short request, a long-running request, and an abrupt kill. Predict which ones can finish in the grace period.",
+    "observe": "SIGTERM handling, grace period, and endpoint removal coordinate imperfectly; existing connections may still need to finish.",
+    "confusion": "When a Pod is Terminating, no client can still reach it.",
+    "recover": "Consider open connections and delayed convergence; inspect endpoint conditions and app signal handling.",
+    "video": {
+      "title": "Stop Losing Requests! Graceful Shutdown Techniques",
+      "creator": "DevOps & AI Toolkit",
+      "url": "https://www.youtube.com/watch?v=eQPYsGrZW_E&t=673s",
+      "note": "Begin at 11:13 for Kubernetes-specific termination behavior; implementation examples are optional.",
+      "duration": "Kubernetes segment"
+    },
+    "docs": [
+      {
+        "title": "Pod termination lifecycle",
+        "url": "https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#termination-of-pods",
+        "why": "Termination grace period and preStop semantics."
+      },
+      {
+        "title": "EndpointSlice terminating endpoints",
+        "url": "https://kubernetes.io/docs/concepts/services-networking/endpoint-slices/#conditions",
+        "why": "Understand ready, serving, and terminating conditions."
+      }
+    ],
+    "lab": "LAB 3B — DRAIN"
+  },
+  {
+    "id": "3-6",
+    "num": "3.6",
+    "title": "Deploy without creating an incident",
+    "kicker": "Rolling updates and rollback",
+    "heading": "A successful rollout is verified from client behavior.",
+    "summary": "Observe maxSurge, maxUnavailable, readiness gating, and Deployment revisions. Distinguish reverting an application from reversing database changes.",
+    "question": "How can a new release fail without taking the whole Service down?",
+    "explore": "Predict the rollout when new Pods stay unready. Observe the relationship between desired replicas, available replicas, and revision history.",
+    "observe": "New Pods gain eligibility only after readiness succeeds; rollback requires behavioral verification.",
+    "confusion": "A successful rollout undo also restores old database contents.",
+    "recover": "Rollbacks change the Deployment Pod template; they do not automatically reverse schema migrations or restore deleted data.",
+    "video": {
+      "title": "Kubernetes Rolling Updates & Rollbacks",
+      "creator": "Techi Nik",
+      "url": "https://www.youtube.com/watch?v=wWA9JgAvuqw&t=57s",
+      "note": "Watch 00:57 rolling update, 03:36 rollback, then 07:11 revision history.",
+      "duration": "Demo segments"
+    },
+    "docs": [
+      {
+        "title": "Kubernetes Deployments",
+        "url": "https://kubernetes.io/docs/concepts/workloads/controllers/deployment/",
+        "why": "RollingUpdate behavior, progress deadlines, and revision history."
+      },
+      {
+        "title": "Perform a rolling update",
+        "url": "https://kubernetes.io/docs/tutorials/kubernetes-basics/update/update-intro/",
+        "why": "Short conceptual refresher before the investigation."
+      }
+    ],
+    "lab": "LAB 3B — UPDATE"
+  },
+  {
+    "id": "3-7",
+    "num": "3.7",
+    "title": "Break it deliberately",
+    "kicker": "Controlled fault injection",
+    "heading": "Predict → Disrupt → Observe → Recover → Verify.",
+    "summary": "Introduce a known fault only in the disposable learning cluster; compare Kubernetes state with actual client outcomes and declare the limits of single-node kind.",
+    "question": "What failure would best reveal a weakness in the system?",
+    "explore": "Choose a fault and a prediction, then list evidence from the client, controller, and datastore points of view.",
+    "observe": "A causal explanation: which condition changed, how it was detected, and how recovery was independently verified.",
+    "confusion": "Deleting a Pod proves that the cluster is highly available.",
+    "recover": "A single-node cluster can show controller-level recovery, but cannot prove node or storage high availability.",
+    "video": {
+      "title": "Kubernetes Chaos Engineering: Pod Delete Experiment",
+      "creator": "Bhoopesh Sharma",
+      "url": "https://www.youtube.com/watch?v=6oOz2-Hh9GQ&t=570s",
+      "note": "Jump to 09:30 for the Pod Delete experiment; tool-specific installation is optional and not required for the lab.",
+      "duration": "Fault-injection segment"
+    },
+    "docs": [
+      {
+        "title": "Debug Pods",
+        "url": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/",
+        "why": "Practical events and container diagnostics."
+      },
+      {
+        "title": "Principles of chaos engineering",
+        "url": "https://principlesofchaos.org/",
+        "why": "Define a hypothesis and control the blast radius."
+      }
+    ],
+    "lab": "LAB 3B — FAULT"
+  },
+  {
+    "id": "3-8",
+    "num": "3.8",
+    "title": "Checkpoint 3: Prove recovery",
+    "kicker": "Evidence over green indicators",
+    "heading": "Document what survived, what failed, and what recovered.",
+    "summary": "Consolidate persistent-record checks, isolated restore evidence, readiness observations, graceful-termination behavior, and one faulty rollout or Pod failure.",
+    "question": "Could another engineer reproduce your failure and verify the recovery?",
+    "explore": "Assemble five artifacts: failure hypothesis, baseline, observation, recovery action, and independent functional verification.",
+    "observe": "An evidence-backed claim that identifies exactly which failure modes the lab did—and did not—test.",
+    "confusion": "The replicas are Ready, so I can mark Checkpoint 3 complete.",
+    "recover": "Add a client-side functional test, the restored record validation, and precise limits of the local cluster.",
+    "video": {
+      "title": "Kubernetes Chaos Engineering — Validation and Recap",
+      "creator": "Bhoopesh Sharma",
+      "url": "https://www.youtube.com/watch?v=6oOz2-Hh9GQ&t=1020s",
+      "note": "At 17:00 the author validates the fault experiment. Compare the video’s observations with your own evidence.",
+      "duration": "Review segment"
+    },
+    "docs": [
+      {
+        "title": "Debug running Pods",
+        "url": "https://kubernetes.io/docs/tasks/debug/debug-application/debug-running-pod/",
+        "why": "A practical checklist for evidence collection."
+      },
+      {
+        "title": "PostgreSQL backup and restore",
+        "url": "https://www.postgresql.org/docs/current/backup.html",
+        "why": "Revisit the distinction between surviving storage and recoverable data."
+      }
+    ],
+    "lab": "CHECKPOINT 3"
+  }
+]

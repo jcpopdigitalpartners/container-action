@@ -1,0 +1,22 @@
+{
+  "name": "containers-in-practice-astro-course",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev --host 0.0.0.0",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check:source": "node --experimental-strip-types scripts/check.mjs",
+    "check:dist": "node scripts/verify-dist.mjs"
+  },
+  "dependencies": {
+    "astro": "7.3.8"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  }
+}
